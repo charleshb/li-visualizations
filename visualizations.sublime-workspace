@@ -1,0 +1,456 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"commun",
+				"community"
+			],
+			[
+				"comm",
+				"community"
+			],
+			[
+				"PAG",
+				"HUMAN_PAGE_VIEWS"
+			],
+			[
+				"communit",
+				"community"
+			],
+			[
+				"com",
+				"communities"
+			],
+			[
+				"find_comm",
+				"find_by_community_code"
+			],
+			[
+				"new",
+				"newValue"
+			],
+			[
+				"customer",
+				"customerId"
+			],
+			[
+				"update_",
+				"update_customer_list"
+			],
+			[
+				"upda",
+				"update_customer_list"
+			],
+			[
+				"cust",
+				"customerId"
+			],
+			[
+				"icon",
+				"icon-remove-sign"
+			],
+			[
+				"ter",
+				"term-active"
+			],
+			[
+				"ven",
+				"vendor_series"
+			],
+			[
+				"find_by_b",
+				"find_by_board_uid"
+			],
+			[
+				"cate",
+				"categories"
+			],
+			[
+				"find_by",
+				"find_by_name"
+			],
+			[
+				"neg",
+				"negative"
+			],
+			[
+				"get",
+				"get_data"
+			],
+			[
+				"min",
+				"min_date"
+			],
+			[
+				"po",
+				"posted_date"
+			],
+			[
+				"find_all_by",
+				"find_all_by_topic_uid"
+			],
+			[
+				"ex",
+				"ext_end"
+			],
+			[
+				"ava",
+				"avatar_url"
+			],
+			[
+				"select",
+				"selectAll"
+			],
+			[
+				"ne",
+				"neutral"
+			],
+			[
+				"maximu",
+				"maximum"
+			],
+			[
+				"sen",
+				"sentiment"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 68.0,
+		"selected_items":
+		[
+			[
+				"coffe",
+				"JS2Coffee: Convert & Make New File"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control",
+				"Preferences: Package Control Settings – User"
+			],
+			[
+				"tit",
+				"Convert Case: Title Case"
+			],
+			[
+				"coff",
+				"Coffee: Compile File"
+			],
+			[
+				"cof",
+				"JS2Coffee: Convert & Overwrite Current File"
+			],
+			[
+				"set syn cof",
+				"Set Syntax: CoffeeScript"
+			],
+			[
+				"json",
+				"Set Syntax: JSON"
+			],
+			[
+				"pac",
+				"Preferences: Package Control Settings – Default"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 174.0,
+		"history":
+		[
+			"import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print('Please restart Sublime Text to finish installation')"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 102.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"dates",
+			"row['date']",
+			"dates",
+			"gmap",
+			"metric",
+			"sort_by_name",
+			"name",
+			"Alerts",
+			"top",
+			"account.annual_recurring_revenue",
+			"arr",
+			"arr_class",
+			"arr",
+			"days_until_due",
+			"icon-chevron-down",
+			",",
+			".on",
+			"prefill",
+			"myTag",
+			"tag_dialog_start",
+			"edit_start",
+			"acceptCommunity",
+			"acceptAccount",
+			"account",
+			"edit_",
+			" class=\"span1\"",
+			"account",
+			"acct",
+			"$scope.tags",
+			"tags",
+			"$scope.tags",
+			"region",
+			"children",
+			"selected_metric_value",
+			"chidlren",
+			"Servigis",
+			"shown",
+			"nCircle",
+			"Rozelle",
+			"url(",
+			"ui-bgsorrock6026",
+			"ui-bg",
+			"url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) ",
+			"filterAcco",
+			"sortgin",
+			"'data-dismiss'=>'modal',",
+			"case_info_start",
+			"case_info_dialog",
+			"summary",
+			"cases",
+			"get_cases",
+			".waves",
+			"waves",
+			"data",
+			".date",
+			"first",
+			"SignalValue::",
+			"afterRender",
+			"graph",
+			"example",
+			"animate",
+			"person",
+			"bcuttoff",
+			"region",
+			".change",
+			"event",
+			" and $scope.started",
+			"accounts_url",
+			"paperboy_app",
+			"customerId",
+			"setupCustomer",
+			".status",
+			".percent",
+			"console",
+			"<title>",
+			"noko",
+			"axes",
+			"	",
+			"console",
+			"300",
+			"+",
+			"local",
+			"','",
+			"_metric",
+			"_cnt",
+			"_nbr",
+			",",
+			"fu.",
+			"	",
+			")",
+			"MAX(",
+			"SUM(",
+			"\"",
+			" ",
+			"      ",
+			"     ",
+			"    ",
+			"   ",
+			"  ",
+			"\\s+",
+			"fu.",
+			"MAX(",
+			")",
+			"SUM(",
+			"registration_time",
+			".date",
+			"    ",
+			"row[12]",
+			"row[11]",
+			"'Sepho",
+			"'Sephora'",
+			"\"Sephora\"",
+			"sephor",
+			"sephot",
+			"200",
+			"side",
+			"options",
+			"build",
+			"update",
+			"controls",
+			"ctl_left",
+			"can_navigate",
+			"can_edit",
+			"ctl_edit",
+			"[ post.user.id ]",
+			"users",
+			"users_final",
+			"threads"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"",
+			",",
+			"	",
+			"'",
+			"	",
+			"'",
+			"	",
+			"'"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 38.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "visualizations.sublime-project",
+	"replace":
+	{
+		"height": 74.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"tess",
+				"app/assets/javascripts/test.js.coffee"
+			],
+			[
+				"ring",
+				"app/assets/javascripts/ring.js.coffee"
+			],
+			[
+				"rin",
+				"app/assets/javascripts/ring.js.coffee"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 279.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

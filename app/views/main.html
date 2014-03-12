@@ -1,0 +1,44 @@
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+    <li class="active"><a ng-href="#">Home</a></li>
+  </ul>
+  <h3 class="text-muted">Labs Visualizations</h3>
+</div>
+
+<div class="row marketing">
+  <h4>Sentiment Wave Graph (with raw JS)</h4>
+  <div id="wg1"></div>
+
+  <h4>Sentiment Wave Graph With Subwave (with raw JS)</h4>
+  <div id="wg2"></div>
+
+  <h4>Sentiment Wave Graph (with AngularJS)</h4>
+  <subwave wave="firstwave"></subwave>
+
+  <h4>Sentiment Wave Graph With Subwave (with AngularJS)</h4>
+  <subwave wave="firstwave" subwave="subwave" height="200"></subwave>
+</div>
+
+<script>
+$(function(){
+  var firstwave = [];
+  var subwave = [];
+  for( var i = 0; i < 500; i++ ) {
+    var val = ( Math.sin( i / 20.0 ) * 200 ) + 20;
+    firstwave.push( {
+      positive: Math.abs( val * 0.3 ),
+      negative: Math.abs( val * 0.2 ),
+      neutral: Math.abs( val * 0.5 )
+    } );
+    var val = ( Math.sin( i / 20.0 ) * 50 ) + 5;
+    subwave.push( {
+      positive: Math.abs( val * 0.3 ),
+      negative: Math.abs( val * 0.2 ),
+      neutral: Math.abs( val * 0.5 )
+    } );
+  }
+  var h1 = new window.SentimentWave( $('#wg1')[0], 800, 100, firstwave );
+  var h2 = new window.SentimentWave( $('#wg2')[0], 800, 100, firstwave );
+  h2.subwave( subwave );
+});
+</script>
