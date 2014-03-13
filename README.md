@@ -23,7 +23,7 @@ This widget doesn't provide an X or Y axis. You need to handle that on your own.
 
 The reticule is designed to be overlaid on other visualizations (like the Sentiment Wave) to provide more information about a particular day. You can adjust the number of slices, as well as the size of each slice and it's annotation. Within each slice is another set of red, green, and grey inner rings that you can use to show the number of negative, positive or neutral elements within that slice.
 
-->![Reticule](/images/reticule.png "Reticule")<-
+<center>![Reticule](/images/reticule.png "Reticule")</center>
 
 ### Elegant Waves
 
