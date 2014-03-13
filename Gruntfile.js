@@ -427,6 +427,7 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'coffee:dist',
+    'coffee:src',
     'concat',
     'ngmin',
     'copy:dist',

@@ -18,6 +18,20 @@
         }
       }
     };
+  }).directive("reticule", function() {
+    return {
+      restrict: "E",
+      scope: {
+        data: "=",
+        size: "@?"
+      },
+      template: "<div></div>",
+      link: function(scope, element, attrs) {
+        var graph;
+        $(element).empty();
+        return graph = new window.Reticule($(element)[0], (scope.size ? scope.size : 250), scope.data);
+      }
+    };
   });
 
 }).call(this);

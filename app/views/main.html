@@ -6,6 +6,17 @@
 </div>
 
 <div class="row marketing">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Reticule (with raw JS)</h4>
+      <div id="r1"></div>
+    </div>
+    <div class="col-md-6">
+      <h4>Reticule (with AngularJS)</h4>
+      <reticule data="reticule_data"></reticule>
+    </div>
+  </div>
+
   <h4>Sentiment Wave Graph (with raw JS)</h4>
   <div id="wg1"></div>
 
@@ -40,5 +51,12 @@ $(function(){
   var h1 = new window.SentimentWave( $('#wg1')[0], 800, 100, firstwave );
   var h2 = new window.SentimentWave( $('#wg2')[0], 800, 100, firstwave );
   h2.subwave( subwave );
+});
+</script>
+
+<script>
+$(function(){
+  var reticule_data = [{label:"a",id:"3",negative:0,positive:1,neutral:1,size:13.801670593274793,max:3},{label:"b",id:"6",negative:0,positive:0,neutral:0,size:14.139001927607625,max:3},{label:"c",id:"7",negative:0,positive:0,neutral:0,size:16.635253801670594,max:2},{label:"d",id:"9",negative:0,positive:0,neutral:0,size:16.635253801670594,max:2},{label:"e",id:"42",negative:0,positive:1,neutral:2,size:21.965088884129365,max:4},{label:"f",id:"29",negative:0,positive:0,neutral:2,size:24.5288070250589,max:3},{label:"g",id:"47",negative:0,positive:4,neutral:0,size:25.810666095523665,max:5},{label:"h",id:"54",negative:0,positive:1,neutral:2,size:26.013064896123367,max:5},{label:"h",id:"41",negative:0,positive:0,neutral:2,size:26.147997429856503,max:6},{label:"j",id:"98",negative:0,positive:1,neutral:3,size:27.429856500321268,max:6},{label:"k",id:"53",negative:0,positive:1,neutral:1,size:31.07303491111587,max:7},{label:"l",id:"30",negative:1,positive:4,neutral:3,size:33.77168558577854,max:7},{label:"m",id:"8",negative:1,positive:5,neutral:3,size:33.77168558577854,max:5},{label:"n",id:"2",negative:1,positive:4,neutral:3,size:48.276932962090385,max:8}];
+  new window.Reticule( $('#r1')[0], 250, reticule_data );
 });
 </script>
