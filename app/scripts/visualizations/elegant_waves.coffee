@@ -195,17 +195,11 @@ class window.ElegantWaves
 			.call xAxis
 
 	drawHilight: () ->
-		if @options.hilightstart?.length > 0
-			hs = @options.hilightstart
-			hs = @options.hilightstart unless hs?
-			he = @max_date
-			if @options.hilightend?.length > 0
-				he = @options.hilightend
-				he = @options.hilightend unless he?
+		if @options.hilightstart? > 0
 			@svg
 				.append( 'rect' )
-				.attr( 'x', @x( hs ) )
-				.attr( 'width', @x( he ) - @x( hs ) )
+				.attr( 'x', @x( @options.hilightstart ) )
+				.attr( 'width', @x( @options.hilightend ) - @x( @options.hilightstart ) )
 				.attr( 'y', 0 )
 				.attr( 'height', @options.height )
 				.style( {
@@ -224,6 +218,24 @@ class window.ElegantWaves
 			@yscale[k] = d3.scale.linear().range [@options.height - 3, 4]
 			@yscale[k].domain d3.extent( @data[k], (v) -> v.value )
 
+	eventStyle: ( event ) ->
+		{
+			'stroke': if event.priority is 1 then 'red' else 'orange'
+			'stroke-width': '4'
+			'stroke-opacity': '0.5'
+		}
+
+	eventAttributes: ( event ) ->
+		{
+			'data-original-title': "#{event.date}: #{event.subject}"
+			'data-placement': 'bottom'
+			'data-toggle': 'tooltip'
+			'data-container': 'body'
+			'class': 'line-tooltip'
+		}
+
+	eventClick: ( event ) ->
+
 	renderEvent: ( event, x ) ->
 		@svg
 			.append( 'line' )
@@ -232,20 +244,10 @@ class window.ElegantWaves
 			.attr( 'x2', x )
 			.attr( 'y1', 0 )
 			.attr( 'y2', @options.height )
-			.attr(
-				'data-original-title': "#{event.date}: #{event.subject}"
-				'data-placement': 'bottom'
-				'data-toggle': 'tooltip'
-				'data-container': 'body'
-				'class': 'line-tooltip'
-			)
-			.style(
-				'stroke': if event.priority is 1 then 'red' else 'orange'
-				'stroke-width': '4'
-				'stroke-opacity': '0.5'
-			)
+			.attr( @eventAttributes( event ) )
+			.style( @eventStyle( event ) )
 			.on 'click', ( d ) =>
-				@options.click( d ) if @options.click?
+				@eventClick( d )
 
 	drawEvents: () ->
 		if @options.events?

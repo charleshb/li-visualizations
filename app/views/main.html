@@ -1,16 +1,23 @@
+<style>
+.description { font-size: 0.9em; color: #666; }
+</style>
+
 <div class="header">
-  <ul class="nav nav-pills pull-right">
-    <li class="active"><a ng-href="#">Home</a></li>
-  </ul>
   <h3 class="text-muted">Labs Visualizations</h3>
 </div>
 
 <div class="row marketing">
+  <p class="description">This is a set of visualizations created at Lithium Labs to support our applications. Feel free to make us of them however you please and we look forward to your pull requests with new features and bug fixes.</p>
+  <p class="description">The visualizations are written with D3 and available as both JS classes and AngularJS-ified with wrappers.</p>
+
   <h4>Elegant Waves (with raw JS)</h4>
   <div id="ew1"></div>
+  <p class="description">You can use this visualization to track metrics over time to see how they relate. The absolute value of a metric in this visualization is not as important and conveying the interaction between metrics. For example, if logins and posts are metrics then noting that a decrease in logins creates a corresponding decrease in posts is interesting. Even though the absolute values between the two metrics are completely different.</p>
+  <p class="description">As shown here you can optionally hilight a region of the visualization to for emphasis. Examples might be a particular release, or a downtime, or the enabling or disabling of a particular option.</p>
 
   <h4>Elegant Waves (with AngularJS)</h4>
-  <elegantwaves data="signals"></elegantwaves>
+  <elegantwaves data="signals" options="signals_options"></elegantwaves>
+  <p class="description">You can also optionally add 'events' to the visualization. By subclassing the visualization you can change how these events are created, placed and styled.</p>
 
   <div class="row">
     <div class="col-md-6">
@@ -22,15 +29,18 @@
       <reticule data="reticule_data"></reticule>
     </div>
   </div>
+  <p class="description">The reticle is designed to be overlaid onto visualizations to provide more detail.</p>
 
   <h4>Sentiment Wave Graph (with raw JS)</h4>
   <div id="wg1"></div>
+  <p class="description">The sentiment wave visualization is designed to show sentiment trends over time. The red band indicates negative sentiment, gray is neutral, and green is positive.</p>
 
   <h4>Sentiment Wave Graph With Subwave (with raw JS)</h4>
   <div id="wg2"></div>
 
   <h4>Sentiment Wave Graph (with AngularJS)</h4>
   <sentimentwave wave="firstwave"></sentimentwave>
+  <p class="description">You can also overlay a "subwave" over the original wave to show the contribution of a particular user or topic to the overall sentiment.</p>
 
   <h4>Sentiment Wave Graph With Subwave (with AngularJS)</h4>
   <sentimentwave wave="firstwave" subwave="subwave" height="200"></sentimentwave>
@@ -69,14 +79,19 @@ $(function(){
 
 <script>
 $(function(){
+  var days_in_ms = function( d ) { return d * ( 24 * 60 * 60 * 1000 ) };
   var signals = { a:[], b: [], c: [] };
   var today = new Date();
   for( var day = 100; day >= 0; day-- ) {
-    var date = today - ( day * ( 24 * 60 * 60 * 1000 ) );
+    var date = today - days_in_ms( day );
     signals.a.push( { date: date, value: Math.abs( Math.cos( ( 100 - day ) / 5.0 ) * 70 ) } )
     signals.b.push( { date: date, value: Math.abs( Math.cos( ( 100 - day ) / 8.0 ) * 100 ) } )
     signals.c.push( { date: date, value: Math.abs( Math.cos( ( 100 - day ) / 25.0 ) * 80 ) } )
   }
-  new ElegantWaves( $('#ew1')[0], signals, {} );
+  var options = {
+    hilightstart: today - days_in_ms( 30 ),
+    hilightend: today - days_in_ms( 10 )
+  }
+  new ElegantWaves( $('#ew1')[0], signals, options );
 });
 </script>

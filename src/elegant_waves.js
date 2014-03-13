@@ -1,5 +1,5 @@
 (function() {
-  var SlotMap, simplifyNumber;
+  var SlotMap;
 
   SlotMap = (function() {
     function SlotMap(totalSlots) {
@@ -61,138 +61,44 @@
 
   })();
 
-  simplifyNumber = function(number) {
-    var postfix, val;
-    postfix = '';
-    if (Math.abs(number) > 1000000000) {
-      number = number / 1000000000;
-      postfix = 'B';
-    }
-    if (Math.abs(number) > 1000000) {
-      number = number / 1000000;
-      postfix = 'M';
-    }
-    if (Math.abs(number) > 1000) {
-      number = number / 1000;
-      postfix = 'K';
-    }
-    val = Math.floor(number * 100.0) / 100.0;
-    return "" + val + postfix;
-  };
-
   window.ElegantWaves = (function() {
-    function ElegantWaves(parent, data, options) {
-      var bisectDate, c, color, d, dr, dr_start_in_ms, filtered_vector, focus, he, hs, k, line, max, max_date, max_text, min, min_date, min_text, min_vector_date, mousemove, mouseout, mouseover, ordered, orig_vector, pt, sm, svg, totalBoxes, vector, x, xAxis, xval, y, yBox, yBoxSize, yBoxUsed, yMap, yOffset, yOverlapRange, yscale, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
+    ElegantWaves.prototype.simplifyNumber = function(number) {
+      var postfix, val;
+      postfix = '';
+      if (Math.abs(number) > 1000000000) {
+        number = number / 1000000000;
+        postfix = 'B';
+      }
+      if (Math.abs(number) > 1000000) {
+        number = number / 1000000;
+        postfix = 'M';
+      }
+      if (Math.abs(number) > 1000) {
+        number = number / 1000;
+        postfix = 'K';
+      }
+      val = Math.floor(number * 100.0) / 100.0;
+      return "" + val + postfix;
+    };
+
+    ElegantWaves.prototype.createFocus = function() {
+      var bisectDate, self, yOverlapRange,
         _this = this;
-      this.parent = parent;
-      this.data = data;
-      this.options = options != null ? options : {};
-      if (this.options.margin == null) {
-        this.options.margin = {
-          top: 20,
-          right: 250,
-          bottom: 30,
-          left: 0
-        };
-      }
-      if (this.options.width == null) {
-        this.options.width = 600;
-      }
-      if (this.options.height == null) {
-        this.options.height = 200;
-      }
-      svg = d3.select(this.parent).append('svg').attr('class', 'elegant-waves').attr('width', this.options.width + this.options.margin.left + this.options.margin.right).attr('height', this.options.height + this.options.margin.top + this.options.margin.bottom).append('g').attr('transform', "translate(" + this.options.margin.left + "," + this.options.margin.top + ")");
-      max_date = new Date();
-      min_date = new Date();
-      min_vector_date = new Date();
-      min_vector_date.setMonth(max_date.getMonth() - 13);
-      _ref = d3.keys(this.data);
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        k = _ref[_i];
-        _ref1 = this.data[k];
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          d = _ref1[_j];
-          if (d.date < min_date) {
-            min_date = d.date;
-          }
-        }
-      }
-      dr_start_in_ms = min_date;
-      if (this.options.daterange) {
-        dr = this.options.daterange + 30;
-        dr_start_in_ms = max_date - (dr * 24 * 60 * 60 * 1000);
-      }
-      x = d3.time.scale().range([0, this.options.width]);
-      xAxis = d3.svg.axis().ticks(5).scale(x).orient('bottom');
-      x.domain([dr_start_in_ms, max_date]);
-      hs = null;
-      he = null;
-      if (((_ref2 = this.options.hilightstart) != null ? _ref2.length : void 0) > 0) {
-        hs = this.options.hilightstart;
-        if (hs == null) {
-          hs = this.options.hilightstart;
-        }
-        he = max_date;
-        if (((_ref3 = this.options.hilightend) != null ? _ref3.length : void 0) > 0) {
-          he = this.options.hilightend;
-          if (he == null) {
-            he = this.options.hilightend;
-          }
-        }
-      }
-      svg.append('g').attr('class', 'x axis').attr('transform', "translate(0," + this.options.height + ")").call(xAxis);
-      color = d3.scale.category10();
-      color.domain(d3.keys(this.data));
-      yBoxSize = 15;
-      yBoxUsed = {};
-      totalBoxes = this.options.height / yBoxSize;
-      sm = new SlotMap(totalBoxes + 1);
-      yscale = {};
-      _ref4 = d3.keys(this.data);
-      for (_k = 0, _len2 = _ref4.length; _k < _len2; _k++) {
-        k = _ref4[_k];
-        vector = this.data[k].filter(function(el) {
-          return el.date >= min_vector_date;
-        });
-        yscale[k] = d3.scale.linear().range([this.options.height - 3, 4]);
-        yscale[k].domain(d3.extent(vector, function(v) {
-          return v.value;
-        }));
-      }
-      ordered = d3.keys(this.data);
-      ordered = ordered.sort(function(a, b) {
-        var av, bv;
-        av = yscale[a](_this.data[a][_this.data[a].length - 1].value);
-        bv = yscale[b](_this.data[b][_this.data[b].length - 1].value);
-        return av > bv;
-      });
-      if (he !== null && hs !== null) {
-        svg.append('rect').attr('x', x(hs)).attr('width', x(he) - x(hs)).attr('y', 0).attr('height', this.options.height).style({
-          fill: 'black',
-          'fill-opacity': '0.2'
-        });
-      }
-      svg.append('text').attr('transform', "translate(" + (x(max_date) + 190) + ",0)").attr('x', 3).attr('y', -10).style('fill', 'black').style('font-weight', 'bold').text("Max");
-      svg.append('text').attr('transform', "translate(" + (x(max_date) + 130) + ",0)").attr('x', 3).attr('y', -10).style('fill', 'black').style('font-weight', 'bold').text("Min");
-      for (_l = 0, _len3 = ordered.length; _l < _len3; _l++) {
-        k = ordered[_l];
-        vector = this.data[k];
-        yBox = Math.floor(yscale[k](vector[vector.length - 1].value) / yBoxSize);
-        sm.add(yBox, k);
-      }
+      this.focus = {};
+      this.yMap = {};
       yOverlapRange = 11;
       bisectDate = d3.bisector(function(d) {
         return d.date;
       }).left;
-      data = this.data;
-      mousemove = function() {
-        var calcYOffset, d0, d1, i, mmVector, stepDown, tempYOffset, x0, xOffset, y, yOffset, yTopMargin, _results,
+      self = this;
+      this.mousemove = function() {
+        var calcYOffset, d, d0, d1, i, k, mmVector, stepDown, tempYOffset, x0, xOffset, y, yOffset, yTopMargin, _results,
           _this = this;
         _results = [];
-        for (k in focus) {
-          y = yscale[k];
-          mmVector = data[k];
-          x0 = x.invert(d3.mouse(this)[0]);
+        for (k in self.focus) {
+          y = self.yscale[k];
+          mmVector = self.data[k];
+          x0 = self.x.invert(d3.mouse(this)[0]);
           i = bisectDate(mmVector, x0, 1);
           d0 = mmVector[i - 1];
           d1 = mmVector[i];
@@ -209,11 +115,12 @@
           stepDown = false;
           yTopMargin = 6;
           calcYOffset = function() {
-            var n, val, yDiff, _results1;
+            var n, val, yDiff, _ref, _results1;
             tempYOffset = yOffset;
+            _ref = self.yMap;
             _results1 = [];
-            for (n in yMap) {
-              val = yMap[n];
+            for (n in _ref) {
+              val = _ref[n];
               if (n === k) {
                 break;
               }
@@ -242,135 +149,324 @@
           while (tempYOffset !== yOffset) {
             calcYOffset();
           }
-          yMap[k] = y(d.value) + yOffset;
-          if ((new Date(d.date)).getTime() === max_date.getTime()) {
+          self.yMap[k] = y(d.value) + yOffset;
+          if ((new Date(d.date)).getTime() === self.max_date.getTime()) {
             xOffset = (d.value.toString().length * -5.9) - 7;
           } else {
             xOffset = 9;
           }
-          focus[k].attr('transform', 'translate(' + x(d.date) + ',' + (y(d.value) + yOffset) + ')');
-          _results.push(focus[k].select('text').attr('x', xOffset).text(d.value));
+          self.focus[k].attr('transform', 'translate(' + self.x(d.date) + ',' + (y(d.value) + yOffset) + ')');
+          self.focus[k].select('text').attr('x', xOffset);
+          _results.push(self.updateFocus(k, d));
         }
         return _results;
       };
-      mouseover = function() {
-        var _results;
+      this.mouseover = function() {
+        var k, _results;
         _results = [];
-        for (k in focus) {
-          _results.push(focus[k].style('display', null));
+        for (k in _this.focus) {
+          _results.push(_this.focus[k].style('display', null));
         }
         return _results;
       };
-      mouseout = function() {
-        var _results;
+      return this.mouseout = function() {
+        var k, _results;
         _results = [];
-        for (k in focus) {
-          _results.push(focus[k].style('display', 'none'));
+        for (k in _this.focus) {
+          _results.push(_this.focus[k].style('display', 'none'));
         }
         return _results;
       };
-      focus = {};
-      yMap = {};
-      yOffset = {};
-      for (_m = 0, _len4 = ordered.length; _m < _len4; _m++) {
-        k = ordered[_m];
-        vector = this.data[k];
-        y = yscale[k];
-        if (this.options.autoscale) {
-          orig_vector = vector;
-          vector = [];
-          for (_n = 0, _len5 = orig_vector.length; _n < _len5; _n++) {
-            pt = orig_vector[_n];
-            if (x(pt.date) >= 0) {
-              vector.push(pt);
-            }
-          }
-        }
-        line = d3.svg.line().interpolate('monotone').x(function(d) {
-          return x(d.date);
-        }).y(function(d) {
-          return y(d.value);
-        });
-        svg.append('path').datum(vector).attr('class', 'line').style('fill', 'none').attr('d', line).style('stroke', function(d) {
-          return color(k);
-        }).style('stroke-width', 1);
-        yBox = sm.get(k) * yBoxSize;
-        svg.append('text').datum(function(d) {
-          return {
-            name: k,
-            value: vector[vector.length - 1]
-          };
-        }).attr('transform', function(d) {
-          return "translate(" + (x(max_date)) + "," + yBox + ")";
-        }).attr('x', 3).attr('dy', '.35em').style('fill', function(d) {
-          return color(k);
-        }).text("" + k);
-        focus[k] = svg.append('g').attr('class', 'focus').style('display', 'none');
-        focus[k].append('circle').attr('r', 3.5).style('stroke', function(d) {
-          return color(k);
-        }).style('fill', 'none');
-        focus[k].append('text').attr('x', 9).attr('y', 0).attr('dy', '.35em');
-        svg.append('rect').attr('width', this.options.width).attr('height', this.options.height).style({
-          'fill': 'none',
-          'pointer-events': 'all'
-        }).on('mouseover', mouseover).on('mouseout', mouseout).on('mousemove', mousemove);
-        filtered_vector = vector.filter(function(el) {
-          return el.date >= min_vector_date;
-        });
-        min = Math.floor(d3.min(filtered_vector, function(d) {
-          return d.value;
-        }));
-        max = Math.floor(d3.max(filtered_vector, function(d) {
-          return d.value;
-        }));
-        min_text = simplifyNumber(min);
-        max_text = simplifyNumber(max);
-        svg.append('text').datum(function(d) {
-          return {
-            name: k,
-            value: vector[vector.length - 1]
-          };
-        }).attr('transform', function(d) {
-          return "translate(" + (x(max_date) + 130) + "," + yBox + ")";
-        }).attr('x', 3).attr('dy', '.35em').style('fill', function(d) {
-          return color(k);
-        }).style('font-weight', k === 'overall_chi_score' ? 'bold' : '').text(min_text);
-        svg.append('text').datum(function(d) {
-          return {
-            name: k,
-            value: vector[vector.length - 1]
-          };
-        }).attr('transform', function(d) {
-          return "translate(" + (x(max_date) + 190) + "," + yBox + ")";
-        }).attr('x', 3).attr('dy', '.35em').style('fill', function(d) {
-          return color(k);
-        }).style('font-weight', k === 'overall_chi_score' ? 'bold' : '').text(max_text);
+    };
+
+    ElegantWaves.prototype.updateFocus = function(signal, data) {
+      return this.focus[signal].select('text').text(this.formatFocusNumber(data.value));
+    };
+
+    ElegantWaves.prototype.formatFocusNumber = function(value) {
+      return Math.round(value * 100.0) / 100.0;
+    };
+
+    ElegantWaves.prototype.drawFocus = function(signal) {
+      var _this = this;
+      this.focus[signal].append('circle').attr('r', 3.5).style('stroke', function(d) {
+        return _this.color(signal);
+      }).style('fill', 'none');
+      return this.focus[signal].append('text').attr('x', 9).attr('y', 0).attr('dy', '.35em');
+    };
+
+    ElegantWaves.prototype.createFocusFor = function(signal) {
+      this.focus[signal] = this.svg.append('g').attr('class', 'focus').style('display', 'none');
+      this.drawFocus(signal);
+      return this.svg.append('rect').attr('width', this.options.width).attr('height', this.options.height).style({
+        'fill': 'none',
+        'pointer-events': 'all'
+      }).on('mouseover', this.mouseover).on('mouseout', this.mouseout).on('mousemove', this.mousemove);
+    };
+
+    ElegantWaves.prototype.drawMinMax = function() {
+      this.svg.append('text').attr('transform', "translate(" + (this.x(this.max_date) + 190) + ",0)").attr('x', 3).attr('y', -10).style('fill', 'black').style('font-weight', 'bold').text(this.options.text.max);
+      return this.svg.append('text').attr('transform', "translate(" + (this.x(this.max_date) + 130) + ",0)").attr('x', 3).attr('y', -10).style('fill', 'black').style('font-weight', 'bold').text(this.options.text.min);
+    };
+
+    ElegantWaves.prototype.setupOptions = function() {
+      if (this.options.margin == null) {
+        this.options.margin = {
+          top: 20,
+          right: 250,
+          bottom: 30,
+          left: 0
+        };
       }
+      if (this.options.width == null) {
+        this.options.width = 600;
+      }
+      if (this.options.height == null) {
+        this.options.height = 200;
+      }
+      if (this.options.text == null) {
+        this.options.text = {};
+      }
+      if (this.options.text.min == null) {
+        this.options.text.min = 'Min';
+      }
+      if (this.options.text.max == null) {
+        return this.options.text.max = 'Max';
+      }
+    };
+
+    ElegantWaves.prototype.createContainer = function() {
+      return this.svg = d3.select(this.parent).append('svg').attr('class', 'elegant-waves').attr('width', this.options.width + this.options.margin.left + this.options.margin.right).attr('height', this.options.height + this.options.margin.top + this.options.margin.bottom).append('g').attr('transform', "translate(" + this.options.margin.left + "," + this.options.margin.top + ")");
+    };
+
+    ElegantWaves.prototype.drawXAxis = function() {
+      var xAxis;
+      xAxis = d3.svg.axis().ticks(5).scale(this.x).orient('bottom');
+      return this.svg.append('g').attr('class', 'x axis').attr('transform', "translate(0," + this.options.height + ")").call(xAxis);
+    };
+
+    ElegantWaves.prototype.drawHilight = function() {
+      if ((this.options.hilightstart != null) > 0) {
+        return this.svg.append('rect').attr('x', this.x(this.options.hilightstart)).attr('width', this.x(this.options.hilightend) - this.x(this.options.hilightstart)).attr('y', 0).attr('height', this.options.height).style({
+          fill: 'black',
+          'fill-opacity': '0.2'
+        });
+      }
+    };
+
+    ElegantWaves.prototype.createXAxis = function() {
+      this.determineMinMaxDates();
+      this.x = d3.time.scale().range([0, this.options.width]);
+      return this.x.domain([this.min_date, this.max_date]);
+    };
+
+    ElegantWaves.prototype.createYScales = function() {
+      var k, _i, _len, _ref, _results;
+      this.yscale = {};
+      _ref = d3.keys(this.data);
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        this.yscale[k] = d3.scale.linear().range([this.options.height - 3, 4]);
+        _results.push(this.yscale[k].domain(d3.extent(this.data[k], function(v) {
+          return v.value;
+        })));
+      }
+      return _results;
+    };
+
+    ElegantWaves.prototype.eventStyle = function(event) {
+      return {
+        'stroke': event.priority === 1 ? 'red' : 'orange',
+        'stroke-width': '4',
+        'stroke-opacity': '0.5'
+      };
+    };
+
+    ElegantWaves.prototype.eventAttributes = function(event) {
+      return {
+        'data-original-title': "" + event.date + ": " + event.subject,
+        'data-placement': 'bottom',
+        'data-toggle': 'tooltip',
+        'data-container': 'body',
+        'class': 'line-tooltip'
+      };
+    };
+
+    ElegantWaves.prototype.eventClick = function(event) {};
+
+    ElegantWaves.prototype.renderEvent = function(event, x) {
+      var _this = this;
+      return this.svg.append('line').datum(event).attr('x1', x).attr('x2', x).attr('y1', 0).attr('y2', this.options.height).attr(this.eventAttributes(event)).style(this.eventStyle(event)).on('click', function(d) {
+        return _this.eventClick(d);
+      });
+    };
+
+    ElegantWaves.prototype.drawEvents = function() {
+      var c, xval, _i, _len, _ref, _results;
       if (this.options.events != null) {
-        _ref5 = this.options.events;
-        for (_o = 0, _len6 = _ref5.length; _o < _len6; _o++) {
-          c = _ref5[_o];
-          xval = x(c.date);
-          if (c.date <= max_date && xval >= 0) {
-            svg.append('line').datum(c).attr('x1', x(c.date)).attr('x2', x(c.date)).attr('y1', 0).attr('y2', this.options.height).attr({
-              'data-original-title': "" + c.date + ": " + c.subject,
-              'data-placement': 'bottom',
-              'data-toggle': 'tooltip',
-              'data-container': 'body',
-              'class': 'line-tooltip'
-            }).style({
-              'stroke': c.priority === 1 ? 'red' : 'orange',
-              'stroke-width': '4',
-              'stroke-opacity': '0.5'
-            }).on('click', function(d) {
-              if (_this.options.click != null) {
-                _this.options.click(d);
-              }
-              return $rootScope.$apply();
-            });
+        _ref = this.options.events;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          c = _ref[_i];
+          xval = this.x(c.date);
+          if (c.date <= this.max_date && xval >= 0) {
+            _results.push(this.renderEvent(c, this.x(c.date)));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      }
+    };
+
+    ElegantWaves.prototype.createOrdering = function() {
+      var _this = this;
+      this.ordered = d3.keys(this.data);
+      return this.ordered = this.ordered.sort(function(a, b) {
+        var av, bv;
+        av = _this.yscale[a](_this.data[a][_this.data[a].length - 1].value);
+        bv = _this.yscale[b](_this.data[b][_this.data[b].length - 1].value);
+        return av > bv;
+      });
+    };
+
+    ElegantWaves.prototype.createColoring = function() {
+      this.color = d3.scale.category10();
+      return this.color.domain(d3.keys(this.data));
+    };
+
+    ElegantWaves.prototype.determineMinMaxDates = function() {
+      var d, dr, k, _i, _j, _len, _len1, _ref, _ref1;
+      this.max_date = new Date();
+      this.min_date = new Date();
+      _ref = d3.keys(this.data);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        _ref1 = this.data[k];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          d = _ref1[_j];
+          if (d.date < this.min_date) {
+            this.min_date = d.date;
           }
         }
       }
+      if (this.options.daterange) {
+        dr = this.options.daterange + 30;
+        return this.min_date = this.max_date - (dr * 24 * 60 * 60 * 1000);
+      }
+    };
+
+    ElegantWaves.prototype.drawMinMaxNumbers = function(signal, yBox) {
+      var max, min, vector,
+        _this = this;
+      vector = this.data[signal];
+      min = Math.floor(d3.min(vector, function(d) {
+        return d.value;
+      }));
+      max = Math.floor(d3.max(vector, function(d) {
+        return d.value;
+      }));
+      this.svg.append('text').datum(function(d) {
+        return {
+          name: signal,
+          value: vector[vector.length - 1]
+        };
+      }).attr('transform', function(d) {
+        return "translate(" + (_this.x(_this.max_date) + 130) + "," + yBox + ")";
+      }).attr('x', 3).attr('dy', '.35em').style('fill', function(d) {
+        return _this.color(signal);
+      }).text(this.simplifyNumber(min));
+      return this.svg.append('text').datum(function(d) {
+        return {
+          name: signal,
+          value: vector[vector.length - 1]
+        };
+      }).attr('transform', function(d) {
+        return "translate(" + (_this.x(_this.max_date) + 190) + "," + yBox + ")";
+      }).attr('x', 3).attr('dy', '.35em').style('fill', function(d) {
+        return _this.color(signal);
+      }).text(this.simplifyNumber(max));
+    };
+
+    ElegantWaves.prototype.drawVector = function(signal) {
+      var line, vector, y,
+        _this = this;
+      vector = this.data[signal];
+      y = this.yscale[signal];
+      line = d3.svg.line().interpolate('monotone').x(function(d) {
+        return _this.x(d.date);
+      }).y(function(d) {
+        return y(d.value);
+      });
+      return this.svg.append('path').datum(vector).attr('class', 'line').style('fill', 'none').attr('d', line).style('stroke', function(d) {
+        return _this.color(signal);
+      }).style('stroke-width', 1);
+    };
+
+    ElegantWaves.prototype.createSlotMap = function() {
+      var k, vector, yBox, _i, _len, _ref, _results;
+      this.yBoxSize = 15;
+      this.slotMap = new SlotMap((this.options.height / this.yBoxSize) + 1);
+      _ref = this.ordered;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        vector = this.data[k];
+        yBox = Math.floor(this.yscale[k](vector[vector.length - 1].value) / this.yBoxSize);
+        _results.push(this.slotMap.add(yBox, k));
+      }
+      return _results;
+    };
+
+    ElegantWaves.prototype.drawSignalText = function(signal, yBox) {
+      var vector,
+        _this = this;
+      vector = this.data[signal];
+      return this.svg.append('text').datum(function(d) {
+        return {
+          name: signal,
+          value: vector[vector.length - 1]
+        };
+      }).attr('transform', function(d) {
+        return "translate(" + (_this.x(_this.max_date)) + "," + yBox + ")";
+      }).attr('x', 3).attr('dy', '.35em').style('fill', function(d) {
+        return _this.color(signal);
+      }).text("" + signal);
+    };
+
+    ElegantWaves.prototype.drawSignals = function() {
+      var signal, yBox, _i, _len, _ref, _results;
+      _ref = this.ordered;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        signal = _ref[_i];
+        this.drawVector(signal);
+        yBox = this.slotMap.get(signal) * this.yBoxSize;
+        this.createFocusFor(signal);
+        this.drawSignalText(signal, yBox);
+        _results.push(this.drawMinMaxNumbers(signal, yBox));
+      }
+      return _results;
+    };
+
+    function ElegantWaves(parent, data, options) {
+      this.parent = parent;
+      this.data = data;
+      this.options = options != null ? options : {};
+      this.setupOptions();
+      this.createContainer();
+      this.createXAxis();
+      this.createYScales();
+      this.createOrdering();
+      this.createColoring();
+      this.createSlotMap();
+      this.createFocus();
+      this.drawXAxis();
+      this.drawHilight();
+      this.drawMinMax();
+      this.drawSignals();
+      this.drawEvents();
     }
 
     return ElegantWaves;
