@@ -1,5 +1,5 @@
 (function() {
-  angular.module("visualizations", []).directive("subwave", function() {
+  angular.module("visualizations", []).directive("sentimentwave", function() {
     return {
       restrict: "E",
       scope: {
@@ -30,6 +30,21 @@
         var graph;
         $(element).empty();
         return graph = new window.Reticule($(element)[0], (scope.size ? scope.size : 250), scope.data);
+      }
+    };
+  }).directive("elegantwaves", function() {
+    return {
+      restrict: "E",
+      scope: {
+        data: "=",
+        options: "=?",
+        size: "@?"
+      },
+      template: "<div></div>",
+      link: function(scope, element, attrs) {
+        var graph;
+        $(element).empty();
+        return graph = new window.ElegantWaves($(element)[0], scope.data, scope.options);
       }
     };
   });

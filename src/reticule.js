@@ -1,5 +1,7 @@
 (function() {
-  window.ReticuleLabels = (function() {
+  var InnerRing, ReticuleLabels;
+
+  ReticuleLabels = (function() {
     function ReticuleLabels(parent, data, width, height, radius, start, end, color, key) {
       var d, enabled, i, inset, mtotal, ratio, sa, tx, x1, x2, y1, y2, _i, _j, _len, _len1, _ref, _ref1;
       this.parent = parent;
@@ -81,7 +83,7 @@
 
   })();
 
-  window.InnerRing = (function() {
+  InnerRing = (function() {
     function InnerRing(parent, data, width, height, radius, start, end, color, key) {
       var arc, g, pie;
       this.parent = parent;
@@ -166,11 +168,11 @@
         start += rw + ri;
       }
       radius = this.diameter / 2;
-      new window.InnerRing(this.svg, this.data, this.width, this.height, radius, 0, start, 'rgba(128,128,128,0.3)', null);
-      this.p = new window.InnerRing(this.svg, this.data, this.width, this.height, radius, rings[0].start, rings[0].end, 'green', 'positive');
-      this.o = new window.InnerRing(this.svg, this.data, this.width, this.height, radius, rings[1].start, rings[1].end, '#999999', 'neutral');
-      this.n = new window.InnerRing(this.svg, this.data, this.width, this.height, radius, rings[2].start, rings[2].end, 'red', 'negative');
-      this.labels = new window.ReticuleLabels(this.svg, this.data, this.width, this.height, radius);
+      new InnerRing(this.svg, this.data, this.width, this.height, radius, 0, start, 'rgba(128,128,128,0.3)', null);
+      this.p = new InnerRing(this.svg, this.data, this.width, this.height, radius, rings[0].start, rings[0].end, 'green', 'positive');
+      this.o = new InnerRing(this.svg, this.data, this.width, this.height, radius, rings[1].start, rings[1].end, '#999999', 'neutral');
+      this.n = new InnerRing(this.svg, this.data, this.width, this.height, radius, rings[2].start, rings[2].end, 'red', 'negative');
+      this.labels = new ReticuleLabels(this.svg, this.data, this.width, this.height, radius);
     }
 
     return Reticule;

@@ -1,4 +1,4 @@
-class window.ReticuleLabels
+class ReticuleLabels
 	constructor: ( @parent, @data, @width, @height, @radius, @start, @end, @color, @key ) ->
 		@svg = @parent
 			.append('g')
@@ -77,7 +77,7 @@ class window.ReticuleLabels
 			@balls[ d.id ].style('fill',color)
 			@texts[ d.id ].style('fill',color)
 
-class window.InnerRing
+class InnerRing
 	constructor: ( @parent, @data, @width, @height, @radius, @start, @end, @color, @key ) ->
 		@innerRadius = @radius - @end
 		arc = d3.svg.arc()
@@ -160,10 +160,10 @@ class window.Reticule
 
 		radius = @diameter / 2
 
-		new window.InnerRing( @svg, @data, @width, @height, radius, 0, start, 'rgba(128,128,128,0.3)', null )
+		new InnerRing( @svg, @data, @width, @height, radius, 0, start, 'rgba(128,128,128,0.3)', null )
 
-		@p = new window.InnerRing( @svg, @data, @width, @height, radius, rings[0].start, rings[0].end, 'green', 'positive' )
-		@o = new window.InnerRing( @svg, @data, @width, @height, radius, rings[1].start, rings[1].end, '#999999', 'neutral' )
-		@n = new window.InnerRing( @svg, @data, @width, @height, radius, rings[2].start, rings[2].end, 'red', 'negative' )
+		@p = new InnerRing( @svg, @data, @width, @height, radius, rings[0].start, rings[0].end, 'green', 'positive' )
+		@o = new InnerRing( @svg, @data, @width, @height, radius, rings[1].start, rings[1].end, '#999999', 'neutral' )
+		@n = new InnerRing( @svg, @data, @width, @height, radius, rings[2].start, rings[2].end, 'red', 'negative' )
 
-		@labels = new window.ReticuleLabels( @svg, @data, @width, @height, radius )
+		@labels = new ReticuleLabels( @svg, @data, @width, @height, radius )

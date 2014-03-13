@@ -1,5 +1,5 @@
 angular.module("visualizations", [])
-.directive "subwave", ->
+.directive "sentimentwave", ->
 	restrict: "E"
 	scope:
 		wave: "="
@@ -28,4 +28,18 @@ angular.module("visualizations", [])
 			$(element)[0],
 			(if scope.size then scope.size else 250),
 			scope.data
+		)
+.directive "elegantwaves", ->
+	restrict: "E"
+	scope:
+		data: "="
+		options: "=?"
+		size: "@?"
+	template: "<div></div>"
+	link: (scope, element, attrs) ->
+		$(element).empty()
+		graph = new window.ElegantWaves(
+			$(element)[0],
+			scope.data,
+			scope.options
 		)
