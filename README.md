@@ -43,7 +43,7 @@ The directories that you need to know about are:
 
 Each component exists in both a Javascript class version, an as an AngularJS directive.
 
-Please note that in order to look at the dist web page you need to install it in a webserver. On a Mac, for example, just go to the dist director and run:
+Please note that in order to look at the dist web page you need to install it in a webserver. On a Mac, for example, just go to the dist directory and run:
 
 `python -m SimpleHTTPServer 8000`
 
