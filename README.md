@@ -3,11 +3,11 @@ Lithium Labs Visualization Components
 
 This is a set of D3 components that we developed as part of the Lithium Labs initiative.
 
-h2. The Widgets
+## The Widgets
 
 There are three widgets provided in this project.
 
-h3. Sentiment Wave
+### Sentiment Wave
 
 The sentiment wave visualization is designed to show sentiment trends over time. The red band indicates negative sentiment, gray is neutral, and green is positive.
 
@@ -17,13 +17,13 @@ You can also overlay a "subwave" over the original wave to show the contribution
 
 ![Sentiment Waves With Subwave](/images/sentiment_wave_with_subwave.png "Sentiment Waves With Subwave")
 
-h3. Reticule
+### Reticule
 
 The reticule is designed to be overlaid on other visualizations (like the Sentiment Wave) to provide more information about a particular day. You can adjust the number of slices, as well as the size of each slice and it's annotation. Within each slice is another set of red, green, and grey inner rings that you can use to show the number of negative, positive or neutral elements within that slice.
 
 ![Reticule](/images/reticule.png "Reticule")
 
-h3. Elegant Waves
+### Elegant Waves
 
 The elegant waves visualization is used to show several different metrics over time. The Y axis is normalized so that all of the waves display take up 100% of the axis even though there min/max ranges might be drastically different. The min and max are shown at the end of the graph.
 
@@ -31,7 +31,7 @@ The elegant waves visualization is used to show several different metrics over t
 
 A rollover is provided that shows the current values at the cursor location. In addition you can add indicators on top of the wave to show when important events happened that could be coincident with changes in various metrics.
 
-h2. Important Directories
+## Important Directories
 
 The relevant directories are:
 
