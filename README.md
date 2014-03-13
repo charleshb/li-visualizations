@@ -33,10 +33,17 @@ A rollover is provided that shows the current values at the cursor location. In 
 
 ## Important Directories
 
-The relevant directories are:
+The directories that you need to know about are:
 
 /src - This contains the source of the components
 
 /dist - This contains an example application
 
 Each component exists in both a Javascript class version, an as an AngularJS directive.
+
+Please note that in order to look at the dist web page you need to install it in a webserver. On a Mac, for example, just go to the dist director and run:
+
+`python -m SimpleHTTPServer 8000`
+
+Then navigate to http://127.0.0.1:8000
+
