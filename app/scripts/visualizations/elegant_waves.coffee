@@ -26,151 +26,38 @@ class SlotMap
 			ind += 1
 		0
 
-simplifyNumber = ( number ) ->
-	postfix = ''
-	if ( Math.abs( number ) > 1000000000 )
-		number = number / 1000000000
-		postfix = 'B'
-	if ( Math.abs( number ) > 1000000 )
-		number = number / 1000000
-		postfix = 'M'
-	if ( Math.abs( number ) > 1000 )
-		number = number / 1000
-		postfix = 'K'
-	val = Math.floor( number * 100.0 ) / 100.0
-	"#{val}#{postfix}"
-
 class window.ElegantWaves
-	constructor: ( @parent, @data, @options = {} ) ->
-		unless @options.margin?
-			@options.margin =
-				top: 20
-				right: 250
-				bottom: 30
-				left: 0
-		@options.width = 600 unless @options.width?
-		@options.height = 200 unless @options.height?
+	simplifyNumber: ( number ) ->
+		postfix = ''
+		if ( Math.abs( number ) > 1000000000 )
+			number = number / 1000000000
+			postfix = 'B'
+		if ( Math.abs( number ) > 1000000 )
+			number = number / 1000000
+			postfix = 'M'
+		if ( Math.abs( number ) > 1000 )
+			number = number / 1000
+			postfix = 'K'
+		val = Math.floor( number * 100.0 ) / 100.0
+		"#{val}#{postfix}"
 
-		svg = d3
-			.select( @parent )
-			.append( 'svg' )
-			.attr( 'class', 'elegant-waves')
-			.attr( 'width', @options.width + @options.margin.left + @options.margin.right )
-			.attr( 'height', @options.height + @options.margin.top + @options.margin.bottom )
-			.append( 'g' )
-			.attr 'transform', "translate(#{@options.margin.left},#{@options.margin.top})"
-
-		max_date = new Date()
-		min_date = new Date()
-
-		min_vector_date = new Date()
-		min_vector_date.setMonth( max_date.getMonth() - 13 );
-
-		for k in d3.keys @data
-			for d in @data[k]
-				min_date = d.date if d.date < min_date
-
-		dr_start_in_ms = min_date
-		if @options.daterange
-			dr = @options.daterange + 30
-			dr_start_in_ms = max_date - ( dr * 24 * 60 * 60 * 1000 )
-
-		x = d3.time
-			.scale()
-			.range [0, @options.width]
-
-		xAxis = d3.svg
-			.axis()
-			.ticks(5)
-			.scale(x)
-			.orient('bottom')
-
-		x.domain [ dr_start_in_ms, max_date ]
-
-		hs = null
-		he = null
-		if @options.hilightstart?.length > 0
-			hs = @options.hilightstart
-			hs = @options.hilightstart unless hs?
-			he = max_date
-			if @options.hilightend?.length > 0
-				he = @options.hilightend
-				he = @options.hilightend unless he?
-
-		svg
-			.append( 'g' )
-			.attr( 'class', 'x axis' )
-			.attr( 'transform', "translate(0,#{@options.height})" )
-			.call xAxis
-
-		color = d3.scale.category10()
-		color.domain d3.keys @data
-
-		yBoxSize = 15
-		yBoxUsed = {}
-		totalBoxes = @options.height / yBoxSize
-		sm = new SlotMap totalBoxes + 1
-
-		yscale = {}
-		for k in d3.keys @data
-			vector = @data[k].filter((el) -> return el.date >= min_vector_date)
-			yscale[k] = d3.scale.linear().range [@options.height - 3, 4]
-			yscale[k].domain d3.extent( vector, (v) -> v.value )
-
-		ordered = d3.keys @data
-		ordered = ordered.sort (a,b) =>
-			av = yscale[a] @data[a][ @data[a].length - 1 ].value
-			bv = yscale[b] @data[b][ @data[b].length - 1 ].value
-			av > bv
-
-		if he != null && hs != null
-			svg
-				.append( 'rect' )
-				.attr( 'x', x( hs ) )
-				.attr( 'width', x( he ) - x( hs ) )
-				.attr( 'y', 0 )
-				.attr( 'height', @options.height )
-				.style( {
-					fill: 'black'
-					'fill-opacity': '0.2'
-				} )
-
-		svg
-			.append( 'text')
-			.attr( 'transform', "translate(#{x(max_date)+190},0)" )
-			.attr( 'x', 3 )
-			.attr( 'y', -10 )
-			.style( 'fill', 'black' )
-			.style( 'font-weight', 'bold' )
-			.text "Max"
-		svg
-			.append( 'text')
-			.attr( 'transform', "translate(#{x(max_date)+130},0)" )
-			.attr( 'x', 3 )
-			.attr( 'y', -10 )
-			.style( 'fill', 'black' )
-			.style( 'font-weight', 'bold' )
-			.text "Min"
-
-		for k in ordered
-			vector = @data[k]
-			yBox = Math.floor yscale[k]( vector[ vector.length - 1 ].value ) / yBoxSize
-			sm.add yBox, k
+	createFocus: () ->
+		@focus = {}
+		@yMap = {}
 
 		yOverlapRange = 11
 		bisectDate = d3.bisector((d) -> d.date).left
 
-		data = @data
-		mousemove = ->
-			for k of focus
-				y = yscale[k]
-				mmVector = data[k]
-				x0 = x.invert(d3.mouse(@)[0])
+		self = @
+		@mousemove = ->
+			for k of self.focus
+				y = self.yscale[k]
+				mmVector = self.data[k]
+				x0 = self.x.invert(d3.mouse(@)[0])
 				i = bisectDate(mmVector, x0, 1)
 				d0 = mmVector[i - 1]
 				d1 = mmVector[i]
-				if d1 == undefined
-					d1 = mmVector[i - 1]
+				d1 = mmVector[i - 1] if d1 == undefined
 				if x0 - d0.date > d1.date - x0
 					d = d1
 				else d = d0
@@ -182,7 +69,7 @@ class window.ElegantWaves
 				yTopMargin = 6
 				calcYOffset = =>
 					tempYOffset = yOffset
-					for n,val of yMap
+					for n,val of self.yMap
 						break if n == k
 						while (true)
 							yDiff = Math.abs(val - (y(d.value) + yOffset))
@@ -198,154 +85,294 @@ class window.ElegantWaves
 				while tempYOffset != yOffset
 					calcYOffset()
 
-				yMap[k] = (y(d.value) + yOffset)
+				self.yMap[k] = (y(d.value) + yOffset)
 
 				# Prevent overlap with Signal text description
-				if (new Date( d.date )).getTime() == max_date.getTime()
+				if (new Date( d.date )).getTime() == self.max_date.getTime()
 					xOffset = (d.value.toString().length * -5.9) - 7
 				else xOffset = 9
 
-				focus[k].attr 'transform', 'translate(' + x(d.date) + ',' + (y(d.value) + yOffset) + ')'
-				focus[k].select('text')
+				self.focus[k].attr 'transform', 'translate(' + self.x(d.date) + ',' + (y(d.value) + yOffset) + ')'
+
+				self.focus[k].select('text')
 					.attr('x', xOffset)
-					.text d.value
 
-		mouseover = =>
-			for k of focus
-				focus[k].style 'display', null
+				self.updateFocus( k, d )
 
-		mouseout = =>
-			for k of focus
-				focus[k].style 'display', 'none'
+		@mouseover = =>
+			for k of @focus
+				@focus[k].style 'display', null
 
-		focus = {}
-		yMap = {}
-		yOffset = {}
-		for k in ordered
-			vector = @data[k]
-			y = yscale[k]
+		@mouseout = =>
+			for k of @focus
+				@focus[k].style 'display', 'none'
 
-			if @options.autoscale
-				orig_vector = vector
-				vector = []
-				for pt in orig_vector
-					if x( pt.date ) >= 0
-						vector.push( pt )
+	updateFocus: ( signal, data ) ->
+		@focus[signal].select('text').text( @formatFocusNumber( data.value ) )
 
-			line = d3.svg
-				.line()
-				.interpolate( 'monotone' )
-				.x( (d) -> x d.date )
-				.y( (d) -> y d.value )
+	formatFocusNumber: ( value ) ->
+		Math.round( value * 100.0 ) / 100.0
 
-			svg
-				.append( 'path' )
-				.datum(vector)
-				.attr( 'class', 'line' )
-				.style( 'fill','none' )
-				.attr( 'd', line )
-				.style( 'stroke', (d) -> color k )
-				.style( 'stroke-width', 1 )
+	drawFocus: ( signal ) ->
+		@focus[signal].append('circle')
+			.attr( 'r', 3.5 )
+			.style( 'stroke', (d) => @color signal )
+			.style( 'fill', 'none')
 
-			yBox = sm.get(k) * yBoxSize
+		@focus[signal].append('text')
+			.attr('x', 9)
+			.attr('y', 0)
+			.attr 'dy', '.35em'
 
-			svg
-				.append('text')
-				.datum((d) ->
-					name: k
-					value: vector[vector.length - 1]
-				)
-				.attr('transform', (d) ->
-					"translate(#{x(max_date)},#{yBox})"
-				)
-				.attr( 'x', 3 )
-				.attr( 'dy', '.35em' )
-				.style( 'fill', (d) -> color k )
-				.text "#{k}"
+	createFocusFor: ( signal ) ->
+		@focus[signal] = @svg.append('g').attr('class', 'focus').style('display', 'none')
 
-			focus[k] = svg.append('g').attr('class', 'focus').style('display', 'none')
+		@drawFocus( signal )
 
-			focus[k].append('circle')
-				.attr( 'r', 3.5 )
-				.style( 'stroke', (d) -> color k )
-				.style( 'fill', 'none')
+		@svg.append('rect')
+			.attr('width', @options.width)
+			.attr('height', @options.height)
+			.style( {
+				'fill': 'none'
+				'pointer-events': 'all'
+			} )
+			.on('mouseover', @mouseover)
+			.on('mouseout', @mouseout)
+			.on 'mousemove', @mousemove
 
-			focus[k].append('text')
-				.attr('x', 9)
-				.attr('y', 0)
-				.attr 'dy', '.35em'
+	drawMinMax: () ->
+		@svg
+			.append( 'text')
+			.attr( 'transform', "translate(#{@x(@max_date)+190},0)" )
+			.attr( 'x', 3 )
+			.attr( 'y', -10 )
+			.style( 'fill', 'black' )
+			.style( 'font-weight', 'bold' )
+			.text @options.text.max
 
-			svg.append('rect')
-				.attr('width', @options.width)
-				.attr('height', @options.height)
+		@svg
+			.append( 'text')
+			.attr( 'transform', "translate(#{@x(@max_date)+130},0)" )
+			.attr( 'x', 3 )
+			.attr( 'y', -10 )
+			.style( 'fill', 'black' )
+			.style( 'font-weight', 'bold' )
+			.text @options.text.min
+
+	setupOptions: () ->
+		unless @options.margin?
+			@options.margin =
+				top: 20
+				right: 250
+				bottom: 30
+				left: 0
+		@options.width = 600 unless @options.width?
+		@options.height = 200 unless @options.height?
+		@options.text = {} unless @options.text?
+		@options.text.min = 'Min' unless @options.text.min?
+		@options.text.max = 'Max' unless @options.text.max?
+
+	createContainer: () ->
+		@svg = d3
+			.select( @parent )
+			.append( 'svg' )
+			.attr( 'class', 'elegant-waves')
+			.attr( 'width', @options.width + @options.margin.left + @options.margin.right )
+			.attr( 'height', @options.height + @options.margin.top + @options.margin.bottom )
+			.append( 'g' )
+			.attr 'transform', "translate(#{@options.margin.left},#{@options.margin.top})"
+
+	drawXAxis: () ->
+		xAxis = d3.svg
+			.axis()
+			.ticks(5)
+			.scale(@x)
+			.orient('bottom')
+		@svg
+			.append( 'g' )
+			.attr( 'class', 'x axis' )
+			.attr( 'transform', "translate(0,#{@options.height})" )
+			.call xAxis
+
+	drawHilight: () ->
+		if @options.hilightstart?.length > 0
+			hs = @options.hilightstart
+			hs = @options.hilightstart unless hs?
+			he = @max_date
+			if @options.hilightend?.length > 0
+				he = @options.hilightend
+				he = @options.hilightend unless he?
+			@svg
+				.append( 'rect' )
+				.attr( 'x', @x( hs ) )
+				.attr( 'width', @x( he ) - @x( hs ) )
+				.attr( 'y', 0 )
+				.attr( 'height', @options.height )
 				.style( {
-					'fill': 'none'
-					'pointer-events': 'all'
+					fill: 'black'
+					'fill-opacity': '0.2'
 				} )
-				.on('mouseover', mouseover)
-				.on('mouseout', mouseout)
-				.on 'mousemove', mousemove
 
-			filtered_vector = vector.filter((el) -> return el.date >= min_vector_date)
-			min = Math.floor d3.min( filtered_vector, ( d ) -> d.value )
-			max = Math.floor d3.max( filtered_vector, ( d ) -> d.value )
+	createXAxis: () ->
+		@determineMinMaxDates()
+		@x = d3.time.scale().range [0, @options.width]
+		@x.domain [ @min_date, @max_date ]
 
-			min_text = simplifyNumber min
-			max_text = simplifyNumber max
+	createYScales: () ->
+		@yscale = {}
+		for k in d3.keys @data
+			@yscale[k] = d3.scale.linear().range [@options.height - 3, 4]
+			@yscale[k].domain d3.extent( @data[k], (v) -> v.value )
 
-			svg
-				.append( 'text' )
-				.datum( (d) ->
-					name: k
-					value: vector[vector.length - 1]
-				)
-				.attr( 'transform', (d) ->
-					"translate(#{x(max_date)+130},#{yBox})"
-				)
-				.attr( 'x', 3 )
-				.attr( 'dy', '.35em' )
-				.style( 'fill', (d) -> color k )
-				.style( 'font-weight', if k is 'overall_chi_score' then 'bold' else '' )
-				.text min_text
+	renderEvent: ( event, x ) ->
+		@svg
+			.append( 'line' )
+			.datum( event )
+			.attr( 'x1', x )
+			.attr( 'x2', x )
+			.attr( 'y1', 0 )
+			.attr( 'y2', @options.height )
+			.attr(
+				'data-original-title': "#{event.date}: #{event.subject}"
+				'data-placement': 'bottom'
+				'data-toggle': 'tooltip'
+				'data-container': 'body'
+				'class': 'line-tooltip'
+			)
+			.style(
+				'stroke': if event.priority is 1 then 'red' else 'orange'
+				'stroke-width': '4'
+				'stroke-opacity': '0.5'
+			)
+			.on 'click', ( d ) =>
+				@options.click( d ) if @options.click?
 
-			svg
-				.append( 'text' )
-				.datum( (d) ->
-					name: k
-					value: vector[vector.length - 1]
-				)
-				.attr( 'transform', (d) ->
-					"translate(#{x(max_date)+190},#{yBox})"
-				)
-				.attr( 'x', 3 )
-				.attr( 'dy', '.35em' )
-				.style( 'fill', (d) -> color k )
-				.style( 'font-weight', if k is 'overall_chi_score' then 'bold' else '' )
-				.text max_text
-
+	drawEvents: () ->
 		if @options.events?
 			for c in @options.events
-				xval = x c.date
-				if c.date <= max_date and xval >= 0
-					svg
-						.append( 'line' )
-						.datum( c )
-						.attr( 'x1', x c.date )
-						.attr( 'x2', x c.date )
-						.attr( 'y1', 0 )
-						.attr( 'y2', @options.height )
-						.attr(
-							'data-original-title': "#{c.date}: #{c.subject}"
-							'data-placement': 'bottom'
-							'data-toggle': 'tooltip'
-							'data-container': 'body'
-							'class': 'line-tooltip'
-						)
-						.style(
-							'stroke': if c.priority is 1 then 'red' else 'orange'
-							'stroke-width': '4'
-							'stroke-opacity': '0.5'
-						)
-						.on 'click', ( d ) =>
-							@options.click( d ) if @options.click?
-							$rootScope.$apply()
+				xval = @x c.date
+				if c.date <= @max_date and xval >= 0
+					@renderEvent( c, @x( c.date ) )
+
+	createOrdering: () ->
+		@ordered = d3.keys @data
+		@ordered = @ordered.sort (a,b) =>
+			av = @yscale[a] @data[a][ @data[a].length - 1 ].value
+			bv = @yscale[b] @data[b][ @data[b].length - 1 ].value
+			av > bv
+
+	createColoring: () ->
+		@color = d3.scale.category10()
+		@color.domain d3.keys @data
+
+	determineMinMaxDates: () ->
+		@max_date = new Date()
+		@min_date = new Date()
+
+		for k in d3.keys @data
+			for d in @data[k]
+				@min_date = d.date if d.date < @min_date
+
+		if @options.daterange
+			dr = @options.daterange + 30
+			@min_date = @max_date - ( dr * 24 * 60 * 60 * 1000 )
+
+	drawMinMaxNumbers: ( signal, yBox ) ->
+		vector = @data[ signal ]
+		min = Math.floor d3.min( vector, ( d ) -> d.value )
+		max = Math.floor d3.max( vector, ( d ) -> d.value )
+
+		@svg
+			.append( 'text' )
+			.datum( (d) ->
+				name: signal
+				value: vector[vector.length - 1]
+			)
+			.attr( 'transform', (d) =>
+				"translate(#{@x(@max_date)+130},#{yBox})"
+			)
+			.attr( 'x', 3 )
+			.attr( 'dy', '.35em' )
+			.style( 'fill', (d) => @color signal )
+			.text @simplifyNumber( min )
+
+		@svg
+			.append( 'text' )
+			.datum( (d) ->
+				name: signal
+				value: vector[vector.length - 1]
+			)
+			.attr( 'transform', (d) =>
+				"translate(#{@x(@max_date)+190},#{yBox})"
+			)
+			.attr( 'x', 3 )
+			.attr( 'dy', '.35em' )
+			.style( 'fill', (d) => @color signal )
+			.text @simplifyNumber( max )
+
+	drawVector: ( signal ) ->
+		vector = @data[ signal ]
+		y = @yscale[ signal ]
+		line = d3.svg
+			.line()
+			.interpolate( 'monotone' )
+			.x( (d) => @x d.date )
+			.y( (d) -> y d.value )
+
+		@svg
+			.append( 'path' )
+			.datum( vector )
+			.attr( 'class', 'line' )
+			.style( 'fill','none' )
+			.attr( 'd', line )
+			.style( 'stroke', (d) => @color signal )
+			.style( 'stroke-width', 1 )
+
+	createSlotMap: () ->
+		@yBoxSize = 15
+		@slotMap = new SlotMap ( @options.height / @yBoxSize ) + 1
+		for k in @ordered
+			vector = @data[k]
+			yBox = Math.floor @yscale[k]( vector[ vector.length - 1 ].value ) / @yBoxSize
+			@slotMap.add yBox, k
+
+	drawSignalText: ( signal, yBox ) ->
+		vector = @data[ signal ]
+		@svg
+			.append('text')
+			.datum((d) ->
+				name: signal
+				value: vector[vector.length - 1]
+			)
+			.attr('transform', (d) =>
+				"translate(#{@x(@max_date)},#{yBox})"
+			)
+			.attr( 'x', 3 )
+			.attr( 'dy', '.35em' )
+			.style( 'fill', (d) => @color signal )
+			.text "#{signal}"
+
+	drawSignals: () ->
+		for signal in @ordered
+			@drawVector( signal )
+			yBox = @slotMap.get( signal ) * @yBoxSize
+			@createFocusFor( signal )
+			@drawSignalText( signal, yBox )
+			@drawMinMaxNumbers( signal, yBox )
+
+	constructor: ( @parent, @data, @options = {} ) ->
+		@setupOptions()
+
+		@createContainer()
+		@createXAxis()
+		@createYScales()
+		@createOrdering()
+		@createColoring()
+		@createSlotMap()
+		@createFocus()
+
+		@drawXAxis()
+		@drawHilight()
+		@drawMinMax()
+		@drawSignals()
+		@drawEvents()
