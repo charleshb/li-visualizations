@@ -162,6 +162,16 @@ module.exports = function (grunt) {
       server: '.tmp'
     },
 
+    concat: {
+      options: {
+        separator: ';',
+      },
+      src: {
+        src: ['src/elegant_waves.js','src/reticule.js','src/sentiment_wave.js','src/directives.js'],
+        dest: 'src/visualizations.js'
+      }
+    },
+
     // Add vendor prefixed styles
     autoprefixer: {
       options: {
@@ -428,6 +438,7 @@ module.exports = function (grunt) {
     'autoprefixer',
     'coffee:dist',
     'coffee:src',
+    'concat:src',
     'concat',
     'ngmin',
     'copy:dist',
@@ -435,8 +446,7 @@ module.exports = function (grunt) {
     'cssmin',
     'uglify',
     'rev',
-    'usemin',
-    'htmlmin'
+    'usemin'
   ]);
 
   grunt.registerTask('default', [

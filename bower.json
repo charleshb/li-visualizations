@@ -1,12 +1,9 @@
 {
   "name": "labs-visualizations",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "main": "src/visualizations.js",
   "scripts": [
-    "src/visualizations.js",
-    "src/sentiment_wave.js",
-    "src/elegant_waves.js",
-    "src/reticule.js"
+    "src/visualizations.js"
   ],
   "dependencies": {
     "angular": "1.2.6",
