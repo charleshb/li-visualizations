@@ -1,6 +1,6 @@
 {
-  "name": "labs-visualizations",
-  "version": "0.0.5",
+  "name": "li-visualizations",
+  "version": "0.0.6",
   "main": "src/visualizations.js",
   "scripts": [
     "src/visualizations.js"

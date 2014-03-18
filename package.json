@@ -1,6 +1,6 @@
 {
-  "name": "labsvisualizations",
-  "version": "0.0.4",
+  "name": "li-visualizations",
+  "version": "0.0.6",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
